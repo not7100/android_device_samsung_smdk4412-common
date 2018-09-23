@@ -18,6 +18,7 @@
 # by BoardConfigVendor.mk
 USE_CAMERA_STUB := false
 BOARD_USES_GENERIC_AUDIO := false
+TARGET_HAS_LEGACY_CAMERA_HAL1 := true
 
 TARGET_BOOTANIMATION_PRELOAD := true
 
@@ -30,6 +31,14 @@ TARGET_ARCH_VARIANT_CPU := cortex-a9
 TARGET_CPU_VARIANT := cortex-a9
 ARCH_ARM_HAVE_NEON := true
 ARCH_ARM_HAVE_TLS_REGISTER := true
+TARGET_NEEDS_EXYNOS4_ENHANCEMENTS := true
+TARGET_USES_GRALLOC1 := true
+TARGET_ALLOWS_INVALID_PTHREAD := true
+TARGET_USES_LEGACY_ADB_INTERFACE := true
+TARGET_DISABLE_ASHMEM_TRACKING := true
+
+# Generate debug info
+PRODUCT_DEX_PREOPT_BOOT_FLAGS += --generate-mini-debug-info
 
 # Board already specifies -mcpu, but it won't hurt to add mtune, too
 BOARD_GLOBAL_CFLAGS += -mtune=cortex-a9
@@ -39,17 +48,8 @@ BOARD_GLOBAL_CPPFLAGS += -mtune=cortex-a9
 BOARD_GLOBAL_CFLAGS += --param l1-cache-line-size=32 --param l1-cache-size=32 --param l2-cache-size=1024
 BOARD_GLOBAL_CPPFLAGS += --param l1-cache-line-size=32 --param l1-cache-size=32 --param l2-cache-size=1024
 
-# Hint the compiler that we're using quad-core CPU
-#BOARD_GLOBAL_CFLAGS += -mvectorize-with-neon-quad
-#BOARD_GLOBAL_CPPFLAGS += -mvectorize-with-neon-quad
-
 EXYNOS4X12_ENHANCEMENTS := true
 EXYNOS4_ENHANCEMENTS := true
-
-ifdef EXYNOS4X12_ENHANCEMENTS
-BOARD_GLOBAL_CFLAGS += -DEXYNOS4_ENHANCEMENTS
-BOARD_GLOBAL_CFLAGS += -DEXYNOS4X12_ENHANCEMENTS
-endif
 
 BOARD_VENDOR := samsung
 TARGET_BOARD_PLATFORM := exynos4
@@ -68,6 +68,8 @@ BOARD_KERNEL_BASE := 0x40000000
 BOARD_KERNEL_PAGESIZE := 2048
 KERNEL_TOOLCHAIN := $(ANDROID_BUILD_TOP)/prebuilts/gcc/$(HOST_OS)-x86/arm/arm-eabi-4.8/bin
 TARGET_KERNEL_CROSS_COMPILE_PREFIX := arm-eabi-
+BOARD_KERNEL_IMAGE_NAME := zImage
+TARGET_NEEDS_PLATFORM_TEXT_RELOCATIONS := true
 
 # Filesystem
 BOARD_NAND_PAGE_SIZE := 4096
@@ -123,6 +125,17 @@ BOARD_USE_S3D_SUPPORT := true
 BOARD_USE_CSC_FIMC := false
 BOARD_CANT_REALLOCATE_OMX_BUFFERS := true
 
+# Enable dex-preoptimization to speed up first boot sequence
+ifeq ($(HOST_OS),linux)
+  ifneq ($(TARGET_BUILD_VARIANT),eng)
+    ifeq ($(WITH_DEXPREOPT),)
+      WITH_DEXPREOPT := true
+    endif
+  endif
+endif
+
+WITH_DEXPREOPT_BOOT_IMG_AND_SYSTEM_SERVER_ONLY := true
+
 # Include an expanded selection of fonts
 EXTENDED_FONT_FOOTPRINT := true
 
@@ -166,7 +179,7 @@ BOARD_HAS_NO_MISC_PARTITION := true
 BOARD_HAS_NO_SELECT_BUTTON := true
 
 # SELinux
-BOARD_SEPOLICY_DIRS += device/samsung/smdk4412-common/selinux
+#BOARD_SEPOLICY_DIRS += device/samsung/smdk4412-common/selinux
 
 # Charging mode
 BOARD_CHARGING_MODE_BOOTING_LPM := /sys/class/power_supply/battery/batt_lp_charging

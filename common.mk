@@ -37,10 +37,6 @@ PRODUCT_COPY_FILES += \
 PRODUCT_COPY_FILES += \
     $(COMMON_PATH)/configs/80cfw:system/etc/init.d/80cfw
 
-# Netflix hack
-PRODUCT_COPY_FILES += \
-    $(COMMON_PATH)/configs/98netflix:system/etc/init.d/98netflix
-
 # Wifi
 PRODUCT_COPY_FILES += \
     $(COMMON_PATH)/configs/wpa_supplicant_overlay.conf:system/etc/wifi/wpa_supplicant_overlay.conf \
@@ -56,7 +52,6 @@ PRODUCT_COPY_FILES += \
 
 # Packages
 PRODUCT_PACKAGES := \
-    AdvancedDisplay \
     audio.a2dp.default \
     audio.primary.smdk4x12 \
     audio.r_submix.default \
@@ -105,8 +100,8 @@ PRODUCT_COPY_FILES += \
     frameworks/av/media/libstagefright/data/media_codecs_google_telephony.xml:system/etc/media_codecs_google_telephony.xml \
     frameworks/av/media/libstagefright/data/media_codecs_google_video.xml:system/etc/media_codecs_google_video.xml
 
-PRODUCT_PACKAGES += \
-    SamsungDoze
+#PRODUCT_PACKAGES += \
+#    SamsungDoze
 
 # Filesystem management tools
 PRODUCT_PACKAGES += \
@@ -124,6 +119,35 @@ PRODUCT_PACKAGES += \
     PhaseBeam \
     VisualizationWallpapers \
     librs_jni
+
+# HIDL stuff
+PRODUCT_PACKAGES += \
+    android.hardware.audio@2.0-impl \
+    android.hardware.audio.effect@2.0-impl \
+    android.hardware.keymaster@3.0-impl \
+    android.hardware.bluetooth@1.0-impl \
+    android.hardware.light@2.0-impl \
+    android.hardware.wifi@1.0-service \
+    wificond \
+    android.hardware.graphics.allocator@2.0-impl \
+    android.hardware.graphics.mapper@2.0-impl \
+    libbt-vendor \
+    android.hardware.camera.provider@2.4-impl-legacy \
+    camera.device@1.0-impl-legacy \
+    Snap \
+    vendor.lineage.power@1.0-impl \
+    vendor.lineage.power@1.0-service \
+    android.hardware.vibrator@1.0-impl \
+    android.hardware.gnss@1.0-impl \
+
+# HIDL manifest
+PRODUCT_COPY_FILES += \
+    device/samsung/smdk4412-common/manifest.xml:system/vendor/manifest.xml
+
+# Camera 
+PRODUCT_PROPERTY_OVERRIDES += \
+    media.stagefright.legacyencoder=true \
+    media.stagefright.less-secure=true
 
 # Charger
 PRODUCT_PACKAGES += \

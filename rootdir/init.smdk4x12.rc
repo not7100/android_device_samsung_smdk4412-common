@@ -392,6 +392,21 @@ on post-fs-data
     chown dhcp dhcp /data/misc/dhcp
     chown wifi root /dev/rfkill
 
+# for WIFI TRP/TIS
+    write /data/.psm.info 0
+    chown system root /data/.psm.info
+    chmod 0664 /data/.psm.info
+
+# for WIFI Version
+    write /data/.wifiver.info 0
+    chown system root /data/.wifiver.info
+    chmod 0666 /data/.wifiver.info
+
+# for WIFI MAC address
+    write /data/.mac.info 0
+    chown system root /data/.mac.info
+    chmod 0664 /data/.mac.info
+
 # for TRP/TIS
     write /data/.psm.info 1
     chown system root /data/.psm.info
@@ -404,6 +419,9 @@ on boot
     setprop ro.build.product smdk4x12
     setprop ro.product.device smdk4x12
     setprop wifi.interface wlan0
+
+# Wifi firmware reload path
+    chown wifi wifi /sys/module/dhd/parameters/firmware_path
 
 # fake some battery state
     setprop status.battery.state Slow
@@ -457,7 +475,7 @@ service charger /sbin/healthd -c
     critical
     seclabel u:r:healthd:s0
 
-service p2p_supplicant /system/bin/wpa_supplicant \
+service p2p_supplicant /system/vendor/bin/hw/wpa_supplicant \
     -iwlan0 -Dnl80211 -c/data/misc/wifi/wpa_supplicant.conf \
     -I/system/etc/wifi/wpa_supplicant_overlay.conf -N \
     -ip2p0 -Dnl80211 -c/data/misc/wifi/p2p_supplicant.conf \
@@ -474,7 +492,7 @@ service p2p_supplicant /system/bin/wpa_supplicant \
     group system wakelock
     oneshot
 
-service wpa_supplicant /system/bin/wpa_supplicant \
+service wpa_supplicant /system/vendor/bin/hw/wpa_supplicant \
     -iwlan0 -Dnl80211 -c/data/misc/wifi/wpa_supplicant.conf \
     -I/system/etc/wifi/wpa_supplicant_overlay.conf \
     -e/data/misc/wifi/entropy.bin -g@android:wpa_wlan0
