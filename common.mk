@@ -103,6 +103,9 @@ PRODUCT_COPY_FILES += \
 #PRODUCT_PACKAGES += \
 #    SamsungDoze
 
+PRODUCT_PACKAGES += \
+    AdvancedDisplay \
+
 # Filesystem management tools
 PRODUCT_PACKAGES += \
     make_ext4fs \
@@ -135,8 +138,8 @@ PRODUCT_PACKAGES += \
     android.hardware.camera.provider@2.4-impl-legacy \
     camera.device@1.0-impl-legacy \
     Snap \
-    vendor.lineage.power@1.0-impl \
-    vendor.lineage.power@1.0-service \
+    android.hardware.power@1.0-impl \
+    android.hardware.power@1.0-service \
     android.hardware.vibrator@1.0-impl \
     android.hardware.gnss@1.0-impl \
 

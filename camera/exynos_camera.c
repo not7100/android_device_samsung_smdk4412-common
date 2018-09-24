@@ -393,6 +393,18 @@ void exynos_camera_stop(struct exynos_camera *exynos_camera)
 #endif
 }
 
+void exynos_camera_deinit(struct exynos_camera *exynos_camera)
+{
+	int i;
+	int id;
+
+	if (exynos_camera == NULL || exynos_camera->config == NULL)
+		return;
+
+	exynos_v4l2_close(exynos_camera, 0);
+	exynos_v4l2_close(exynos_camera, 2);
+}
+
 // Params
 
 int exynos_camera_params_init(struct exynos_camera *exynos_camera, int id)
@@ -3710,6 +3722,7 @@ void exynos_camera_release(struct camera_device *dev)
 
 	exynos_camera_stop(exynos_camera);
 }
+
 
 int exynos_camera_dump(struct camera_device *dev, int fd)
 {

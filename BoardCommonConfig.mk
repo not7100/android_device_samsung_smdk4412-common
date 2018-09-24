@@ -37,8 +37,10 @@ TARGET_ALLOWS_INVALID_PTHREAD := true
 TARGET_USES_LEGACY_ADB_INTERFACE := true
 TARGET_DISABLE_ASHMEM_TRACKING := true
 
-# Generate debug info
-PRODUCT_DEX_PREOPT_BOOT_FLAGS += --generate-mini-debug-info
+WITH_DEXPREOPT := false
+PRODUCT_DEX_PREOPT_BOOT_FLAGS += --compiler-filter=quicken
+PRODUCT_SYSTEM_SERVER_COMPILER_FILTER := quicken
+WITH_DEX_PREOPT_GENERATE_PROFILE := false
 
 # Board already specifies -mcpu, but it won't hurt to add mtune, too
 BOARD_GLOBAL_CFLAGS += -mtune=cortex-a9
@@ -75,7 +77,7 @@ TARGET_NEEDS_PLATFORM_TEXT_RELOCATIONS := true
 BOARD_NAND_PAGE_SIZE := 4096
 BOARD_NAND_SPARE_SIZE := 128
 BOARD_BOOTIMAGE_PARTITION_SIZE := 8388608
-BOARD_RECOVERYIMAGE_PARTITION_SIZE := 9999999
+BOARD_RECOVERYIMAGE_PARTITION_SIZE := 99999999
 BOARD_SYSTEMIMAGE_PARTITION_SIZE := 1610612736
 BOARD_USERDATAIMAGE_PARTITION_SIZE := 12381585408
 BOARD_FLASH_BLOCK_SIZE := 4096
@@ -83,8 +85,8 @@ TARGET_USERIMAGES_USE_EXT4 := true
 TARGET_USES_BLOCK_BASED_OTA := false
 
 # Hardware tunables
-BOARD_HARDWARE_CLASS := hardware/samsung/cmhw \
-    device/samsung/smdk4412-common/cmhw
+BOARD_HARDWARE_CLASS := hardware/samsung/lineagehw \
+    device/samsung/smdk4412-common/lineagehw
 
 # Graphics
 BOARD_EGL_NEEDS_HANDLE_VALUE := true
@@ -124,17 +126,6 @@ BOARD_USES_MFC_FPS := true
 BOARD_USE_S3D_SUPPORT := true
 BOARD_USE_CSC_FIMC := false
 BOARD_CANT_REALLOCATE_OMX_BUFFERS := true
-
-# Enable dex-preoptimization to speed up first boot sequence
-ifeq ($(HOST_OS),linux)
-  ifneq ($(TARGET_BUILD_VARIANT),eng)
-    ifeq ($(WITH_DEXPREOPT),)
-      WITH_DEXPREOPT := true
-    endif
-  endif
-endif
-
-WITH_DEXPREOPT_BOOT_IMG_AND_SYSTEM_SERVER_ONLY := true
 
 # Include an expanded selection of fonts
 EXTENDED_FONT_FOOTPRINT := true
@@ -182,7 +173,6 @@ BOARD_HAS_NO_SELECT_BUTTON := true
 #BOARD_SEPOLICY_DIRS += device/samsung/smdk4412-common/selinux
 
 # Charging mode
-BOARD_CHARGING_MODE_BOOTING_LPM := /sys/class/power_supply/battery/batt_lp_charging
 BOARD_BATTERY_DEVICE_NAME := "battery"
 BOARD_CHARGER_ENABLE_SUSPEND := true
 RED_LED_PATH := /sys/class/leds/led_r/brightness
